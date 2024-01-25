@@ -208,19 +208,12 @@ async function run() {
       })
     })
 
-
-
-
     // sfsdflkjlksadjf
     // Find the product by ID and update it with the new review
     // const result = await collection.updateOne(
     //   { _id: productId },
     //   { $push: { reviews: review } }
     // );
-
-
-
-
 
     // get menus api
     app.post('/item', async (req, res) => {
