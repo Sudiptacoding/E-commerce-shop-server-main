@@ -116,7 +116,8 @@ async function run() {
     await client.connect();
 
 
-    const menusCollection = client.db("E-commerce-Shop").collection("menus");
+    const menusCollection = client.db("E-commerce-Shop").collection("menu");
+
     const blogsCollection = client.db("E-commerce-Shop").collection("blogs");
     const addtocardCollection = client.db("E-commerce-Shop").collection("additemstocards");
     const addtoloveCollection = client.db("E-commerce-Shop").collection("additemstolove");
@@ -222,6 +223,28 @@ async function run() {
 
 
     // get menus api
+    app.post('/item', async (req, res) => {
+      const result = await menusCollection.insertOne(req.body);
+      res.send(result);
+    })
+
+    // get menus api
+    app.get('/sameitems', async (req, res) => {
+      const result = await menusCollection.find({ category: req.query.category }).toArray();
+      res.send(result);
+    })
+
+    // get menus api
+    app.patch('/sameitems/:id', async (req, res) => {
+      const result = await menusCollection.updateOne(
+        { _id: new ObjectId(req.params.id) },
+        { $push: { customerReviews: req.body } }
+      );
+      res.send(result);
+    })
+
+
+    // get menus api
     app.get('/menus', async (req, res) => {
       const result = await menusCollection.find().toArray();
       res.send(result);
@@ -235,7 +258,7 @@ async function run() {
 
     app.get('/menu/:id', async (req, res) => {
       const result = await menusCollection.findOne({ _id: new ObjectId(req.params.id) });
-      res.send(data[0]);
+      res.send(result);
     })
 
     // get blogs api
