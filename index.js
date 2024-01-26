@@ -35,7 +35,6 @@ async function run() {
 
 
     const menusCollection = client.db("E-commerce-Shop").collection("menu");
-
     const blogsCollection = client.db("E-commerce-Shop").collection("blogs");
     const addtocardCollection = client.db("E-commerce-Shop").collection("additemstocards");
     const addtoloveCollection = client.db("E-commerce-Shop").collection("additemstolove");
