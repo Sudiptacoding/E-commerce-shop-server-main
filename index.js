@@ -27,88 +27,6 @@ const client = new MongoClient(uri, {
 });
 
 
-const data = [
-  {
-    "_id": "6596ae79cf7baf4b61be377c",
-    "category": "shirt",
-    "image": [
-      "https://i.ibb.co/mXRb4cb/721dbbff1a76aa38489c0aed7ed17ea0.jpg",
-      "https://i.ibb.co/ftfjTKt/147aa4af52ce33eeae58a79209bc960d.jpg",
-      "https://i.ibb.co/SKX9nSr/27425f2f5d1c0b486ba6173069cc2623.jpg",
-      "https://i.ibb.co/rxbNGZs/b84530478e68ff2d158cb2fbe2f142f9.jpg"
-    ],
-    "name": "Half Sleeve Shirts",
-    "price": 79.99,
-    "title": "Adobe Illustrator Masterclass",
-    "details": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ducimus commodi necessitatibus illo omnis delectus...",
-    "rating": 3,
-    "customerReviews": [
-      {
-        "profileimg": "",
-        "name": "Safayet Ahmed",
-        "rating": 3,
-        "description": "This is the best product that I found from them. They are the best seller in this country.",
-        "date": "04/01/2024"
-      }
-    ]
-  },
-  {
-    "_id": "6596ae79cf7baf4b61be377c",
-    "category": "shirt",
-    "image": [
-      "https://i.ibb.co/mXRb4cb/721dbbff1a76aa38489c0aed7ed17ea0.jpg",
-      "https://i.ibb.co/ftfjTKt/147aa4af52ce33eeae58a79209bc960d.jpg",
-      "https://i.ibb.co/SKX9nSr/27425f2f5d1c0b486ba6173069cc2623.jpg",
-      "https://i.ibb.co/rxbNGZs/b84530478e68ff2d158cb2fbe2f142f9.jpg"
-    ],
-    "name": "Half Sleeve Shirts",
-    "price": 79.99,
-    "title": "Adobe Illustrator Masterclass",
-    "details": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ducimus commodi necessitatibus illo omnis delectus...",
-    "rating": 3,
-    "customerReviews": [
-      {
-        "profileimg": "",
-        "name": "Safayet Ahmed",
-        "rating": 3,
-        "description": "This is the best product that I found from them. They are the best seller in this country.",
-        "date": "04/01/2024"
-      }
-    ]
-  },
-  {
-    "_id": "6596ae79cf7baf4b61be377c",
-    "category": "shirt",
-    "image": [
-      "https://i.ibb.co/mXRb4cb/721dbbff1a76aa38489c0aed7ed17ea0.jpg",
-      "https://i.ibb.co/ftfjTKt/147aa4af52ce33eeae58a79209bc960d.jpg",
-      "https://i.ibb.co/SKX9nSr/27425f2f5d1c0b486ba6173069cc2623.jpg",
-      "https://i.ibb.co/rxbNGZs/b84530478e68ff2d158cb2fbe2f142f9.jpg"
-    ],
-    "name": "Half Sleeve Shirts",
-    "price": 79.99,
-    "title": "Adobe Illustrator Masterclass",
-    "details": "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ducimus commodi necessitatibus illo omnis delectus...",
-    "rating": 3,
-    "customerReviews": [
-      {
-        "profileimg": "",
-        "name": "Safayet Ahmed",
-        "rating": 3,
-        "description": "This is the best product that I found from them. They are the best seller in this country.",
-        "date": "04/01/2024"
-      }
-    ]
-  }
-]
-
-
-
-
-
-
-
-
 
 async function run() {
   try {
@@ -208,16 +126,42 @@ async function run() {
       })
     })
 
-    // sfsdflkjlksadjf
-    // Find the product by ID and update it with the new review
-    // const result = await collection.updateOne(
-    //   { _id: productId },
-    //   { $push: { reviews: review } }
-    // );
 
     // get menus api
     app.post('/item', async (req, res) => {
       const result = await menusCollection.insertOne(req.body);
+      res.send(result);
+    })
+
+    app.delete('/item/:id', async (req, res) => {
+      const result = await menusCollection.deleteOne({ _id: new ObjectId(req.params.id) });
+      res.send(result);
+    })
+
+    // clear 
+    app.get('/allloveclear', async (req, res) => {
+      const result = await addtoloveCollection.deleteMany({ email: req.query.email });
+      res.send(result);
+    })
+
+    // clear 
+    app.get('/allcardclear', async (req, res) => {
+      const result = await addtocardCollection.deleteMany({ email: req.query.email });
+      res.send(result);
+    })
+
+
+
+    // get menus api
+    app.put('/item/:id', async (req, res) => {
+      const filter = { _id: new ObjectId(req.params.id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          ...req.body
+        },
+      };
+      const result = await menusCollection.updateOne(filter, updateDoc, options);
       res.send(result);
     })
 
