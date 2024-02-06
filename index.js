@@ -38,8 +38,8 @@ async function run() {
     const blogsCollection = client.db("E-commerce-Shop").collection("blogs");
     const addtocardCollection = client.db("E-commerce-Shop").collection("additemstocards");
     const addtoloveCollection = client.db("E-commerce-Shop").collection("additemstolove");
-    const buyproduct = client.db("E-commerce-Shop").collection("buyallproductss");
-    const alluser = client.db("E-commerce-Shop").collection("user");
+    const buyproduct = client.db("E-commerce-Shop").collection("buyAllproducts");
+    const alluser = client.db("E-commerce-Shop").collection("users");
 
 
 
@@ -50,7 +50,7 @@ async function run() {
     app.post('/buynow', async (req, res) => {
       const uniqID = new ObjectId().toString()
       const data = {
-        total_amount: 100,
+        total_amount: 1000,
         currency: 'BDT',
         tran_id: 'REF123', // use unique tran_id for each api call
         success_url: `http://localhost:5000/success/${uniqID}`,
@@ -85,15 +85,22 @@ async function run() {
         let GatewayPageURL = apiResponse.GatewayPageURL
         res.send({ url: GatewayPageURL })
 
-        const { _id, ...item } = req.body
+        const itemsWithoutId = req?.body?.map(item => {
+          // Destructure the object to remove the _id field
+          const { _id, ...itemWithoutId } = item;
+          return itemWithoutId;
+        });
 
-        const order = {
-          item,
-          pementStatus: false,
+        const orders = itemsWithoutId.map(order => ({
+          ...order,
+          paymentStatus: false, // Corrected typo "pementStatus" to "paymentStatus"
           trankID: uniqID
-        }
+        }));
 
-        const result = buyproduct.insertOne(order);
+        const result = buyproduct.insertMany(orders);
+
+
+
       });
 
       app.post('/success/:id', async (req, res) => {
@@ -103,7 +110,7 @@ async function run() {
             pementStatus: true
           },
         };
-        const result = await buyproduct.updateOne(filter, updateDoc);
+        const result = await buyproduct.updateMany(filter, updateDoc);
         if (result.modifiedCount > 0) {
           res.redirect('http://localhost:5173/successpement')
         }
@@ -215,6 +222,31 @@ async function run() {
         const user = await alluser.insertOne(req.body);
         res.send(user)
       }
+    })
+
+    // add to user
+    app.get('/alluser', async (req, res) => {
+      const result = await alluser.find().toArray()
+      res.send(result)
+    })
+
+    // delete to user
+    app.delete('/user/:id', async (req, res) => {
+      const result = await alluser.deleteOne({ _id: new ObjectId(req.params.id) })
+      res.send(result)
+    })
+
+    // patch to user
+    app.patch('/user/:id', async (req, res) => {
+      const filter = { _id: new ObjectId(req.params.id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          status: `admin`
+        },
+      };
+      const result = await alluser.updateOne(filter, updateDoc, options);
+      res.send(result)
     })
 
     // add to addtolove post
