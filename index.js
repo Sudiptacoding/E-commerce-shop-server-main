@@ -112,7 +112,10 @@ async function run() {
         };
         const result = await buyproduct.updateMany(filter, updateDoc);
         if (result.modifiedCount > 0) {
-          res.redirect('http://localhost:5173/successpement')
+
+          res.redirect('https://e-commers-webside.web.app/successpement')
+
+
         }
       })
 
@@ -120,14 +123,14 @@ async function run() {
         const filter = { trankID: req.params.id };
         const result = await buyproduct.deleteOne(filter)
         if (result.deletedCount > 0) {
-          res.redirect('http://localhost:5173/faieldpement')
+          res.redirect('https://e-commers-webside.web.app/faieldpement')
         }
       })
       app.post('/cancel/:id', async (req, res) => {
         const filter = { trankID: req.params.id };
         const result = await buyproduct.deleteOne(filter)
         if (result.deletedCount > 0) {
-          res.redirect('http://localhost:5173/faieldpement')
+          res.redirect('https://e-commers-webside.web.app/faieldpement')
         }
       })
     })
