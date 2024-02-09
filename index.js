@@ -53,9 +53,9 @@ async function run() {
         total_amount: 1000,
         currency: 'BDT',
         tran_id: 'REF123', // use unique tran_id for each api call
-        success_url: `http://localhost:5000/success/${uniqID}`,
-        fail_url: `http://localhost:5000/faild/${uniqID}`,
-        cancel_url: `http://localhost:5000/cancel/${uniqID}`,
+        success_url: `https://e-commerce-shop-server-main.vercel.app/success/${uniqID}`,
+        fail_url: `https://e-commerce-shop-server-main.vercel.app/faild/${uniqID}`,
+        cancel_url: `https://e-commerce-shop-server-main.vercel.app/cancel/${uniqID}`,
         ipn_url: 'http://localhost:3030/ipn',
         shipping_method: 'Courier',
         product_name: 'Computer.',
